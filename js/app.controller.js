@@ -32,15 +32,26 @@ function onInit() {
         })
 }
 
-function renderLocs(locs) {
+function renderLocs(locs, isUserPos, userPos) {
     const selectedLocId = getLocIdFromQueryParams()
-
+    
     var strHTML = locs.map(loc => {
         const className = (loc.id === selectedLocId) ? 'active' : ''
+        let locNameDis
+        console.log(loc)
+        let latlng1 = {
+            lat: loc.geo.lat,
+            lng: loc.geo.lng
+        }
+
+        if (isUserPos) {
+            locNameDis =  `<span>${loc.name}</span>
+            <span>Distance: ${utilService.getDistance(latlng1, userPos, 'K')} KM</span>`
+        }else locNameDis = `<span>${loc.name}</span>`
         return `
         <li class="loc ${className}" data-id="${loc.id}">
             <h4>  
-                <span>${loc.name}</span>
+                ${locNameDis}
                 <span title="${loc.rate} stars">${'★'.repeat(loc.rate)}</span>
             </h4>
             <p class="muted">
@@ -131,24 +142,27 @@ function onAddLoc(geo) {
         })
 }
 
-function loadAndRenderLocs() {
-    
+function loadAndRenderLocs(isUserPos = false, userPos = 0) {
+
     locService.query()
-    .then(renderLocs)
-    .catch(err => {
-        console.error('OOPs:', err)
-        flashMsg('Cannot load locations')
-    })
+        .then(locs => renderLocs(locs, isUserPos, userPos))
+        .catch(err => {
+            console.error('OOPs:', err)
+            flashMsg('Cannot load locations')
+        })
     // console.log(gFilterBy);
 }
 
 function onPanToUserPos() {
+
     mapService.getUserPosition()
         .then(latLng => {
             mapService.panTo({ ...latLng, zoom: 15 })
             unDisplayLoc()
-            loadAndRenderLocs()
+            loadAndRenderLocs(true, latLng)
             flashMsg(`You are at Latitude: ${latLng.lat} Longitude: ${latLng.lng}`)
+            // calcDistance(loc, latLng)
+
         })
         .catch(err => {
             console.error('OOPs:', err)
@@ -256,11 +270,11 @@ function getLocIdFromQueryParams() {
 function onSetSortBy() {
     const prop = document.querySelector('.sort-by').value
     const isDesc = document.querySelector('.sort-desc').checked
-    
+
     console.log(prop);
 
     if (!prop) return
-    
+
     const sortBy = {}
     sortBy[prop] = (isDesc) ? -1 : 1
 

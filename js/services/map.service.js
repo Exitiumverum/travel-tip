@@ -5,7 +5,8 @@ export const mapService = {
     setMarker,
     panTo,
     lookupAddressGeo,
-    addClickListener
+    addClickListener,
+    getUserPosition
 }
 
 // TODO: Enter your API Key
@@ -80,7 +81,7 @@ function setMarker(loc) {
 function getUserPosition() {
     return new Promise((resolve, reject) => {
         function onSuccess(res) {
-            const latLng = {
+           const latLng = {
                 lat: res.coords.latitude,
                 lng: res.coords.longitude
             }
