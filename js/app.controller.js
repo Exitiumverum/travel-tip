@@ -16,7 +16,7 @@ window.app = {
     onShareLoc,
     onSetSortBy,
     onSetFilterBy,
-    onAddLoc
+    onAddLoc,
     onToggleTheme,
 }
 
