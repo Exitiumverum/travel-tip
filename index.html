@@ -11,7 +11,7 @@
 <body>
     <header>
         <h1>TravelTip <button onclick="app.onToggleTheme(this)">🌙</button></h1>
-        
+
         <section class="selected-loc">
             <h2>Location: <span class="loc-name"></span> <span class="loc-rate"></span></h2>
             <h4 class="loc-address"></h4>
@@ -75,6 +75,16 @@
     </main>
     <pre class="debug" hidden></pre>
     <div class="user-msg"></div>
+
+    <dialog class="modal-save-loc">
+        <form onsubmit="app.onSaveLoc(event, this)">
+            <input name="geo" class="data-geo" hidden>
+            <input name="id" class="data" hidden>
+            <input placeholder="Location name" class="name" type="text">
+            <input placeholder="Location rate" class="rate" type="number">
+            <button>Save</button>
+        </form>
+    </dialog>
 
     <script src="lib/jquery.js"></script>
     <script src="lib/swal.js"></script>

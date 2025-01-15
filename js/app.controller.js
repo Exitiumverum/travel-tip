@@ -17,6 +17,7 @@ window.app = {
     onSetSortBy,
     onSetFilterBy,
     onToggleTheme,
+    onSaveLoc,
 }
 
 function onInit() {
@@ -35,7 +36,7 @@ function onInit() {
 
 function renderLocs(locs, isUserPos, userPos) {
     const selectedLocId = getLocIdFromQueryParams()
-    
+
     var strHTML = locs.map(loc => {
         const className = (loc.id === selectedLocId) ? 'active' : ''
         let locNameDis
@@ -123,23 +124,48 @@ function onSearchAddress(ev) {
 }
 
 function onAddLoc(geo) {
-    const locName = prompt('Loc name', geo.address || 'Just a place')
+    $('.data-geo').attr('data-geo', JSON.stringify(geo))
+    $('.modal-save-loc .name').prop('disabled', false)
+    document.querySelector('.modal-save-loc').showModal()
+}
+
+function onSaveLoc(ev, elForm) {
+    ev.preventDefault()
+    document.querySelector('.modal-save-loc').close()
+    
+
+    const locName = $(elForm).find('.name').val()
     if (!locName) return
 
     const loc = {
+        rate: +$(elForm).find('.rate').val() ?? 3,
         name: locName,
-        rate: +prompt(`Rate (1-5)`, '3'),
-        geo
+        geo: JSON.parse($('.data-geo').attr('data-geo'))
     }
+
+    // Update instead of create?
+    const locId = $(`.modal-save-loc .data`).attr('data-id')
+    if (locId !== undefined) {
+        loc.id = locId
+        delete loc.name
+        delete loc.geo
+    }
+
     locService.save(loc)
         .then((savedLoc) => {
-            flashMsg(`Added Location (id: ${savedLoc.id})`)
+            flashMsg(`Saved Location (id: ${savedLoc.id})`)
             utilService.updateQueryParams({ locId: savedLoc.id })
             loadAndRenderLocs()
         })
         .catch(err => {
             console.error('OOPs:', err)
             flashMsg('Cannot add location')
+        })
+        .finally(() => {
+            // Clear modal
+            $('.modal-save-loc input').val('')
+            $(`.modal-save-loc .data`).attr('data-id', '')
+            $('.data-geo').attr('data-geo', '')
         })
 }
 
@@ -174,20 +200,12 @@ function onPanToUserPos() {
 function onUpdateLoc(locId) {
     locService.getById(locId)
         .then(loc => {
-            const rate = prompt('New rate?', loc.rate)
-            if (rate && rate !== loc.rate) {
-                loc.rate = rate
-                locService.save(loc)
-                    .then(savedLoc => {
-                        flashMsg(`Rate was set to: ${savedLoc.rate}`)
-                        loadAndRenderLocs()
-                    })
-                    .catch(err => {
-                        console.error('OOPs:', err)
-                        flashMsg('Cannot update location')
-                    })
-
-            }
+            console.log('loc:', loc)
+            $('.data-geo').attr('data-geo', JSON.stringify(loc.geo))
+            $(`.modal-save-loc .data`).attr('data-id', loc.id)
+            $('.modal-save-loc .name').prop('disabled', true)
+            $('.modal-save-loc .name').val(loc.name)
+            document.querySelector('.modal-save-loc').showModal()
         })
 }
 
