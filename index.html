@@ -37,7 +37,8 @@
                     <div>
                         <label>
                             Min Rate:
-                            <input name="filter-by-rate" type="range" min="0" max="5" value="0" class="filter-rate-range"
+                            <input name="filter-by-rate" type="range" min="0" max="5" value="0"
+                                class="filter-rate-range"
                                 onchange="this.title=this.value;app.onSetFilterBy({minRate: this.value})" />
                         </label>
                     </div>
@@ -46,7 +47,7 @@
                         <select class="sort-by" onchange="app.onSetSortBy()">
                             <option value="rate">Rate</option>
                             <option value="name" selected>Name</option>
-                            <option value="createdAt" >Creation time</option>
+                            <option value="createdAt">Creation time</option>
                         </select>
                         <label>
                             <input class="sort-desc" type="checkbox" oninput="app.onSetSortBy()" />
@@ -69,6 +70,9 @@
     </main>
     <pre class="debug" hidden></pre>
     <div class="user-msg"></div>
+
+    <dialog class="modal">
+    </dialog>
 
     <script src="lib/swal.js"></script>
     <script type="module" src="js/app.controller.js"></script>

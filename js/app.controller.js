@@ -16,6 +16,7 @@ window.app = {
     onShareLoc,
     onSetSortBy,
     onSetFilterBy,
+    onAddLoc
 }
 
 function onInit() {
@@ -34,7 +35,7 @@ function onInit() {
 
 function renderLocs(locs, isUserPos, userPos) {
     const selectedLocId = getLocIdFromQueryParams()
-    
+
     var strHTML = locs.map(loc => {
         const className = (loc.id === selectedLocId) ? 'active' : ''
         let locNameDis
@@ -45,9 +46,9 @@ function renderLocs(locs, isUserPos, userPos) {
         }
 
         if (isUserPos) {
-            locNameDis =  `<span>${loc.name}</span>
+            locNameDis = `<span>${loc.name}</span>
             <span>Distance: ${utilService.getDistance(latlng1, userPos, 'K')} KM</span>`
-        }else locNameDis = `<span>${loc.name}</span>`
+        } else locNameDis = `<span>${loc.name}</span>`
         return `
         <li class="loc ${className}" data-id="${loc.id}">
             <h4>  
@@ -122,24 +123,52 @@ function onSearchAddress(ev) {
 }
 
 function onAddLoc(geo) {
-    const locName = prompt('Loc name', geo.address || 'Just a place')
-    if (!locName) return
+    const MODAL = document.querySelector('.modal')
 
-    const loc = {
-        name: locName,
-        rate: +prompt(`Rate (1-5)`, '3'),
-        geo
-    }
-    locService.save(loc)
-        .then((savedLoc) => {
-            flashMsg(`Added Location (id: ${savedLoc.id})`)
-            utilService.updateQueryParams({ locId: savedLoc.id })
-            loadAndRenderLocs()
-        })
-        .catch(err => {
-            console.error('OOPs:', err)
-            flashMsg('Cannot add location')
-        })
+    MODAL.innerHTML = `<h1>Location's name</h1>
+        <input class="loc-name-modal" type="text" value="">
+        <h2>Rate</h2>
+        <input class="loc-rate-modal" type="text" value="">
+        <button class="submit-btn" type="submit">Add</button>
+        <button class="cancel">Cancel</button>`
+
+    const MODAL_NAME = document.querySelector('.loc-name-modal')
+    const MODAL_RATE = document.querySelector('.loc-rate-modal')
+
+
+    MODAL.showModal()
+
+    // document.querySelector('.')
+    document.querySelector('.submit-btn').addEventListener('click', () => {
+        console.log(MODAL_NAME.value, MODAL_RATE.value)
+
+
+        const loc = {
+            name: MODAL_NAME.value,
+            rate: MODAL_RATE.value,
+            geo
+        }
+        console.log(loc)
+
+        locService.save(loc)
+            .then((savedLoc) => {
+                flashMsg(`Added Location (id: ${savedLoc.id})`)
+                utilService.updateQueryParams({ locId: savedLoc.id })
+                loadAndRenderLocs()
+                MODAL.close()
+            })
+            .catch(err => {
+                console.error('OOPs:', err)
+                flashMsg('Cannot add location')
+            })
+    })
+
+
+    console.log(MODAL_NAME, MODAL_RATE)
+    // const locName = prompt('Loc name', geo.address || 'Just a place')
+    // if (!locName) return
+
+
 }
 
 function loadAndRenderLocs(isUserPos = false, userPos = 0) {
@@ -171,15 +200,27 @@ function onPanToUserPos() {
 }
 
 function onUpdateLoc(locId) {
+    const MODAL = document.querySelector('.modal')
+
+    MODAL.innerHTML = `<h2>Rate</h2>
+        <input class="loc-rate-modal" type="text" value="">
+        <button class="submit-btn" type="submit">Add</button>
+        <button class="cancel">Cancel</button>`
+
+    const MODAL_RATE = document.querySelector('.loc-rate-modal')
+    MODAL.showModal()
+
     locService.getById(locId)
         .then(loc => {
-            const rate = prompt('New rate?', loc.rate)
+    document.querySelector('.submit-btn').addEventListener('click', () => {
+            const rate = MODAL_RATE.value
             if (rate && rate !== loc.rate) {
                 loc.rate = rate
                 locService.save(loc)
                     .then(savedLoc => {
                         flashMsg(`Rate was set to: ${savedLoc.rate}`)
                         loadAndRenderLocs()
+                        MODAL.close()
                     })
                     .catch(err => {
                         console.error('OOPs:', err)
@@ -187,6 +228,7 @@ function onUpdateLoc(locId) {
                     })
 
             }
+        })
         })
 }
 
