@@ -1,22 +1,21 @@
 :root {
-    --bg1: darkslateblue;
-    --bg2: darkorchid;
-    --bg3: darkmagenta;
-    --color1: aliceblue;
-    --color2: deeppink;
-    --color3: gold;
-    --color4: goldenrod;
-    --gray1: lightgray;
+    --bg1: #e0e0e0; /* Light gray */
+    --bg2: #c5c5c5; /* Medium light gray */
+    --bg3: #b0b0b0; /* Slightly darker gray */
+    --color1: #333333; /* Dark gray text */
+    --color2: #4a90e2; /* Soft blue */
+    --color3: #f5a623; /* Warm orange */
+    --color4: #f0ad4e; /* Soft yellow-orange */
+    --gray1: #d3d3d3; /* Light gray */
 }
 
-/* Another theme */
-/* :root {
-    --bg1: rgb(37, 13, 195);
-    --bg2: rgb(26, 110, 146);
-    --bg3: rgb(9, 49, 226);
-    --color1: aliceblue;
-    --color2: rgb(94, 169, 240);
-    --color3: rgb(211, 187, 48);
-    --color4: rgb(90, 66, 6);
-    --gray1: lightgray;
-} */
+.custom-theme {
+    --bg1: #121212; /* Very dark gray (almost black) */
+    --bg2: #1e1e1e; /* Dark gray */
+    --bg3: #262626; /* Slightly lighter dark gray */
+    --color1: #f0f0f0; /* Light grayish white */
+    --color2: #58a6ff; /* Light blue */
+    --color3: #ffb94d; /* Warm golden orange */
+    --color4: #ff8c00; /* Bright orange */
+    --gray1: #444444; /* Medium gray */
+}

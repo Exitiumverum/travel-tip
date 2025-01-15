@@ -16,6 +16,7 @@ window.app = {
     onShareLoc,
     onSetSortBy,
     onSetFilterBy,
+    onToggleTheme,
 }
 
 function onInit() {
@@ -291,6 +292,13 @@ function onSetFilterBy({ txt, minRate }) {
     const filterBy = locService.setFilterBy({ txt, minRate: +minRate })
     utilService.updateQueryParams(filterBy)
     loadAndRenderLocs()
+}
+
+function onToggleTheme(elBtn) {
+    $('body').toggleClass('custom-theme')
+    let nextTxt = '☀️'
+    if ($(elBtn).text() === '☀️') nextTxt = '🌙'
+    $(elBtn).text(nextTxt)
 }
 
 function renderLocStats() {

@@ -10,7 +10,8 @@
 
 <body>
     <header>
-        <h1>TravelTip</h1>
+        <h1>TravelTip <button onclick="app.onToggleTheme(this)">🌙</button></h1>
+        
         <section class="selected-loc">
             <h2>Location: <span class="loc-name"></span> <span class="loc-rate"></span></h2>
             <h4 class="loc-address"></h4>
@@ -75,6 +76,7 @@
     <pre class="debug" hidden></pre>
     <div class="user-msg"></div>
 
+    <script src="lib/jquery.js"></script>
     <script src="lib/swal.js"></script>
     <script type="module" src="js/app.controller.js"></script>
 </body>
