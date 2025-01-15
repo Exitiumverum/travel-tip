@@ -44,6 +44,7 @@ function query() {
                 locs = locs.filter(loc => loc.rate >= gFilterBy.minRate)
             }
 
+
             // No paging (unused)
             if (gPageIdx !== undefined) {
                 const startIdx = gPageIdx * PAGE_SIZE
@@ -54,7 +55,11 @@ function query() {
                 locs.sort((p1, p2) => (p1.rate - p2.rate) * gSortBy.rate)
             } else if (gSortBy.name !== undefined) {
                 locs.sort((p1, p2) => p1.name.localeCompare(p2.name) * gSortBy.name)
+            } else {
+                locs.sort((p1, p2) => (p1.createdAt - p2.createdAt) * gSortBy.createdAt)
             }
+
+
 
             return locs
         })

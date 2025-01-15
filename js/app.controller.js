@@ -132,12 +132,14 @@ function onAddLoc(geo) {
 }
 
 function loadAndRenderLocs() {
+    
     locService.query()
-        .then(renderLocs)
-        .catch(err => {
-            console.error('OOPs:', err)
-            flashMsg('Cannot load locations')
-        })
+    .then(renderLocs)
+    .catch(err => {
+        console.error('OOPs:', err)
+        flashMsg('Cannot load locations')
+    })
+    // console.log(gFilterBy);
 }
 
 function onPanToUserPos() {
@@ -254,9 +256,11 @@ function getLocIdFromQueryParams() {
 function onSetSortBy() {
     const prop = document.querySelector('.sort-by').value
     const isDesc = document.querySelector('.sort-desc').checked
+    
+    console.log(prop);
 
     if (!prop) return
-
+    
     const sortBy = {}
     sortBy[prop] = (isDesc) ? -1 : 1
 
